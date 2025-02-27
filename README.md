@@ -3,7 +3,7 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Tests](https://github.com/tassan/endpoint-scouter/workflows/build/badge.svg)](https://github.com/tassan/endpoint-scouter/actions)
+[![Build](https://github.com/tassan/endpoint-scouter/actions/workflows/build.yml/badge.svg)](https://github.com/tassan/endpoint-scouter/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/tassan/endpoint-scouter/badge.svg?branch=main)](https://coveralls.io/github/tassan/endpoint-scouter?branch=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tassan_endpoint-scouter&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tassan_endpoint-scouter)
 [![Documentation Status](https://readthedocs.org/projects/endpoint-scouter/badge/?version=latest)](https://endpoint-scouter.readthedocs.io/en/latest/?badge=latest)
