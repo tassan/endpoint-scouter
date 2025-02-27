@@ -12,36 +12,36 @@ logger = logging.getLogger("EndpointScouter")
 
 class HtmlReporter:
     """Generates HTML reports from scan results."""
-    
+
     def __init__(self, config: Dict[str, Any] = None):
         """
         Initialize the reporter.
-        
+
         Args:
             config: Configuration dictionary
         """
         self.config = config or {}
         self.dbz_mode = config.get("dbz_mode", False)
-    
+
     def generate(self, results: List[ScanResult], output_file: str) -> str:
         """
         Generate an HTML report.
-        
+
         Args:
             results: List of scan results
             output_file: Output file path
-            
+
         Returns:
             str: Path to the generated report
         """
         try:
             # Create summary
             summary = ScanSummary(results)
-            
+
             # Get security score
             security_score = self._calculate_security_score(results)
             score_class = self._get_score_class(security_score)
-            
+
             html_content = f"""
             <!DOCTYPE html>
             <html>
@@ -88,7 +88,7 @@ class HtmlReporter:
                         <th>Secure</th>
                     </tr>
             """
-            
+
             # Add domains
             for domain, data in summary.domains.items():
                 html_content += f"""
@@ -99,7 +99,7 @@ class HtmlReporter:
                         <td>{data['secure']}</td>
                     </tr>
                 """
-                
+
             html_content += """
                 </table>
                 
@@ -110,7 +110,7 @@ class HtmlReporter:
                         <th>Count</th>
                     </tr>
             """
-            
+
             # Add common issues
             for issue, count in summary.common_issues.items():
                 html_content += f"""
@@ -119,7 +119,7 @@ class HtmlReporter:
                         <td>{count}</td>
                     </tr>
                 """
-                
+
             html_content += """
                 </table>
                 
@@ -135,7 +135,7 @@ class HtmlReporter:
                         <th>Issues</th>
                     </tr>
             """
-            
+
             # Add endpoints
             for r in results:
                 status_class = ""
@@ -146,9 +146,9 @@ class HtmlReporter:
                         status_class = "medium"
                     else:
                         status_class = "bad"
-                        
+
                 issues = "<br>".join(r.issues) if r.issues else "None"
-                
+
                 html_content += f"""
                     <tr class="endpoint-row">
                         <td>{r.endpoint.url}</td>
@@ -160,35 +160,35 @@ class HtmlReporter:
                         <td class="issues-list">{issues}</td>
                     </tr>
                 """
-                
+
             html_content += """
                 </table>
             </body>
             </html>
             """
-            
+
             with open(output_file, "w", encoding="utf-8") as f:
                 f.write(html_content)
-                
+
             logger.info(f"HTML report generated: {output_file}")
             return output_file
         except Exception as e:
             logger.error(f"Error generating HTML report: {str(e)}")
             raise
-    
+
     def _get_score_class(self, score: str) -> str:
         """
         Get CSS class based on score value.
-        
+
         Args:
             score: Score string
-            
+
         Returns:
             str: CSS class
         """
         try:
             score_value = float(score.split()[0])
-            
+
             if score_value >= 5000:
                 return "good"
             elif score_value >= 3000:
@@ -197,29 +197,29 @@ class HtmlReporter:
                 return "bad"
         except (ValueError, IndexError):
             return "medium"
-    
+
     def _calculate_security_score(self, results: List[ScanResult]) -> str:
         """
         Calculate security score based on results.
-        
+
         Args:
             results: List of scan results
-            
+
         Returns:
             str: Security score with message
         """
         if not results:
             return "0 - No results to score"
-        
+
         total_score = 0
         max_score_per_endpoint = 9000
-        
+
         for result in results:
             endpoint_score = 0
-            
+
             # Points for security headers
             endpoint_score += len(result.security_headers) * 500
-            
+
             # Points for CORS configuration
             if result.cors_headers:
                 origin_header = result.cors_headers.get("Access-Control-Allow-Origin")
@@ -227,25 +227,27 @@ class HtmlReporter:
                     endpoint_score += 1500  # Restrictive CORS
                 else:
                     endpoint_score += 500  # CORS configured, but permissive
-            
+
             # Points for rate limiting
             if result.rate_limit_detected:
                 endpoint_score += 2000
-            
+
             # Deduct points for issues
             endpoint_score -= len(result.issues) * 300
-            
+
             # Deduct points for vulnerabilities
             if result.vulnerabilities:
-                endpoint_score -= sum(1 for v in result.vulnerabilities.values() if v) * 1000
-            
+                endpoint_score -= (
+                    sum(1 for v in result.vulnerabilities.values() if v) * 1000
+                )
+
             # Limit maximum endpoint score
             endpoint_score = max(0, min(endpoint_score, max_score_per_endpoint))
             total_score += endpoint_score
-        
+
         # Average score
         avg_score = total_score / len(results)
-        
+
         # Return score with appropriate message based on mode
         if self.dbz_mode:
             if avg_score >= 8000:
@@ -257,7 +259,9 @@ class HtmlReporter:
             elif avg_score >= 3000:
                 return f"{avg_score:.0f} - Saiyan Warrior: Good foundation but room for improvement"
             elif avg_score >= 1000:
-                return f"{avg_score:.0f} - Trained Human: Basic security measures present"
+                return (
+                    f"{avg_score:.0f} - Trained Human: Basic security measures present"
+                )
             else:
                 return f"{avg_score:.0f} - Ordinary Human... serious security improvements needed!"
         else:

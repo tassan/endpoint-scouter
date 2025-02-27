@@ -13,7 +13,7 @@ logger = logging.getLogger("EndpointScouter")
 def parse_arguments() -> argparse.Namespace:
     """
     Parse command-line arguments.
-    
+
     Returns:
         argparse.Namespace: Parsed arguments
     """
@@ -27,34 +27,30 @@ def parse_arguments() -> argparse.Namespace:
         "-o", "--output", help="Output file for the report (without extension)"
     )
     parser.add_argument(
-        "--format", 
-        choices=["json", "csv", "html", "all"], 
+        "--format",
+        choices=["json", "csv", "html", "all"],
         default="all",
-        help="Report format(s) to generate (default: all)"
+        help="Report format(s) to generate (default: all)",
     )
     parser.add_argument(
-        "-v", "--verbose",
-        action="store_true",
-        help="Enable verbose logging"
+        "-v", "--verbose", action="store_true", help="Enable verbose logging"
     )
     parser.add_argument(
-        "--dbz-mode",
-        action="store_true",
-        help="Enable Dragon Ball Z themed responses"
+        "--dbz-mode", action="store_true", help="Enable Dragon Ball Z themed responses"
     )
-    
+
     return parser.parse_args()
 
 
 def setup_logging(verbose: bool = False) -> None:
     """
     Set up logging configuration.
-    
+
     Args:
         verbose: Whether to enable verbose logging
     """
     log_level = logging.DEBUG if verbose else logging.INFO
-    
+
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s - %(levelname)s - %(message)s",
@@ -65,7 +61,7 @@ def setup_logging(verbose: bool = False) -> None:
 def print_header(dbz_mode: bool = False) -> None:
     """
     Print header information.
-    
+
     Args:
         dbz_mode: Whether to use Dragon Ball Z themed messages
     """
@@ -82,7 +78,7 @@ def print_header(dbz_mode: bool = False) -> None:
 def print_scan_start(endpoint_count: int, dbz_mode: bool = False) -> None:
     """
     Print scan start message.
-    
+
     Args:
         endpoint_count: Number of endpoints to scan
         dbz_mode: Whether to use Dragon Ball Z themed messages
@@ -96,7 +92,7 @@ def print_scan_start(endpoint_count: int, dbz_mode: bool = False) -> None:
 def print_report_generation(dbz_mode: bool = False) -> None:
     """
     Print report generation message.
-    
+
     Args:
         dbz_mode: Whether to use Dragon Ball Z themed messages
     """
@@ -109,7 +105,7 @@ def print_report_generation(dbz_mode: bool = False) -> None:
 def print_completion(security_score: str, dbz_mode: bool = False) -> None:
     """
     Print completion message.
-    
+
     Args:
         security_score: Security score
         dbz_mode: Whether to use Dragon Ball Z themed messages
@@ -125,7 +121,7 @@ def print_completion(security_score: str, dbz_mode: bool = False) -> None:
 def print_report_locations(report_files: Dict[str, str]) -> None:
     """
     Print report file locations.
-    
+
     Args:
         report_files: Dictionary mapping format to file path
     """
@@ -137,7 +133,7 @@ def print_report_locations(report_files: Dict[str, str]) -> None:
 def print_error(error: Exception, verbose: bool = False) -> None:
     """
     Print error message.
-    
+
     Args:
         error: Exception that occurred
         verbose: Whether to enable verbose logging
@@ -145,4 +141,5 @@ def print_error(error: Exception, verbose: bool = False) -> None:
     print(f"❌ Error: {str(error)}")
     if verbose:
         import traceback
+
         traceback.print_exc()

@@ -8,4 +8,4 @@ from endpoint_scouter.core.endpoint import Endpoint
 from endpoint_scouter.core.result import ScanResult, ScanSummary
 from endpoint_scouter.core.scanner import Scanner
 
-__all__ = ['Endpoint', 'ScanResult', 'ScanSummary', 'Scanner']
+__all__ = ["Endpoint", "ScanResult", "ScanSummary", "Scanner"]

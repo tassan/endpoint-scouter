@@ -13,18 +13,18 @@ logger = logging.getLogger("EndpointScouter")
 def calculate_endpoint_score(result: ScanResult) -> int:
     """
     Calculate security score for a single endpoint.
-    
+
     Args:
         result: Scan result
-        
+
     Returns:
         int: Security score
     """
     endpoint_score = 0
-    
+
     # Points for security headers
     endpoint_score += len(result.security_headers) * 500
-    
+
     # Points for CORS configuration
     if result.cors_headers:
         origin_header = result.cors_headers.get("Access-Control-Allow-Origin")
@@ -32,18 +32,18 @@ def calculate_endpoint_score(result: ScanResult) -> int:
             endpoint_score += 1500  # Restrictive CORS
         else:
             endpoint_score += 500  # CORS configured, but permissive
-    
+
     # Points for rate limiting
     if result.rate_limit_detected:
         endpoint_score += 2000
-    
+
     # Deduct points for issues
     endpoint_score -= len(result.issues) * 300
-    
+
     # Deduct points for vulnerabilities
     if result.vulnerabilities:
         endpoint_score -= sum(1 for v in result.vulnerabilities.values() if v) * 1000
-    
+
     # Ensure score is not negative
     return max(0, endpoint_score)
 
@@ -51,27 +51,27 @@ def calculate_endpoint_score(result: ScanResult) -> int:
 def calculate_overall_score(results: List[ScanResult], max_score: int = 9000) -> int:
     """
     Calculate overall security score for all endpoints.
-    
+
     Args:
         results: List of scan results
         max_score: Maximum score per endpoint
-        
+
     Returns:
         int: Average security score
     """
     if not results:
         return 0
-    
+
     total_score = 0
-    
+
     for result in results:
         # Calculate score for this endpoint
         endpoint_score = calculate_endpoint_score(result)
-        
+
         # Limit maximum endpoint score
         endpoint_score = min(endpoint_score, max_score)
         total_score += endpoint_score
-    
+
     # Calculate average score
     return int(total_score / len(results))
 
@@ -79,11 +79,11 @@ def calculate_overall_score(results: List[ScanResult], max_score: int = 9000) ->
 def get_score_message(score: int, dbz_mode: bool = False) -> str:
     """
     Get appropriate message for a security score.
-    
+
     Args:
         score: Security score
         dbz_mode: Whether to use Dragon Ball Z themed messages
-        
+
     Returns:
         str: Security score with message
     """
@@ -118,48 +118,50 @@ def get_score_message(score: int, dbz_mode: bool = False) -> str:
 def calculate_domain_scores(results: List[ScanResult]) -> Dict[str, Any]:
     """
     Calculate security scores grouped by domain.
-    
+
     Args:
         results: List of scan results
-        
+
     Returns:
         Dict[str, Any]: Dictionary mapping domains to scores
     """
     from urllib.parse import urlparse
-    
+
     domains = {}
-    
+
     for result in results:
         try:
             domain = urlparse(result.endpoint.url).netloc
-            
+
             if domain not in domains:
                 domains[domain] = {
                     "count": 0,
                     "score": 0,
                     "issues": 0,
                     "secure": 0,
-                    "endpoints": []
+                    "endpoints": [],
                 }
-            
+
             # Calculate score for this endpoint
             endpoint_score = calculate_endpoint_score(result)
-            
+
             domains[domain]["count"] += 1
             domains[domain]["score"] += endpoint_score
             domains[domain]["issues"] += len(result.issues)
-            
+
             if result.is_secure():
                 domains[domain]["secure"] += 1
-                
+
             domains[domain]["endpoints"].append(result.endpoint.url)
-            
+
         except Exception as e:
             logger.debug(f"Error calculating domain score: {str(e)}")
-    
+
     # Calculate average score for each domain
     for domain in domains:
         if domains[domain]["count"] > 0:
-            domains[domain]["score"] = int(domains[domain]["score"] / domains[domain]["count"])
-    
+            domains[domain]["score"] = int(
+                domains[domain]["score"] / domains[domain]["count"]
+            )
+
     return domains

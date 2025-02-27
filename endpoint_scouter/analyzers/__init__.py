@@ -10,8 +10,8 @@ from endpoint_scouter.analyzers.rate_limit import RateLimitAnalyzer
 from endpoint_scouter.analyzers.vulnerabilities import VulnerabilityAnalyzer
 
 __all__ = [
-    'HeaderAnalyzer',
-    'CorsAnalyzer', 
-    'RateLimitAnalyzer',
-    'VulnerabilityAnalyzer'
+    "HeaderAnalyzer",
+    "CorsAnalyzer",
+    "RateLimitAnalyzer",
+    "VulnerabilityAnalyzer",
 ]
