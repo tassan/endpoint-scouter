@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 
 from endpoint_scouter import main
 from endpoint_scouter.utils.cli import parse_arguments
-from .fixtures import mock_config, mock_scan_results
+from ..fixtures.fixture import mock_config, mock_scan_results
 
 class TestIntegration:
     @patch('endpoint_scouter.utils.cli.parse_arguments')

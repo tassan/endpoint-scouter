@@ -4,7 +4,7 @@ from unittest.mock import patch, mock_open
 from endpoint_scouter.reporters.json_reporter import JsonReporter
 from endpoint_scouter.reporters.csv_reporter import CsvReporter
 from endpoint_scouter.reporters.html_reporter import HtmlReporter
-from .fixtures import mock_config, mock_scan_results
+from ..fixtures.fixture import mock_config, mock_scan_results
 
 class TestReporters:
     def test_json_reporter(self, mock_config, mock_scan_results):

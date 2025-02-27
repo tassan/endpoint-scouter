@@ -2,7 +2,7 @@ import json
 from unittest.mock import patch, mock_open
 
 from endpoint_scouter.core.scanner import Scanner
-from .fixtures import mock_config, mock_scan_results
+from ..fixtures.fixture import mock_config, mock_scan_results
 
 class TestScanner:
     @patch('builtins.open', new_callable=mock_open, read_data=json.dumps({"endpoints": [{"url": "https://example.com/api"}]}))

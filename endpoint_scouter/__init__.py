@@ -7,3 +7,5 @@ and generate reports on their security posture.
 
 __version__ = "1.0.0"
 __author__ = "EndpointScouter Team"
+
+from .__main__ import main
