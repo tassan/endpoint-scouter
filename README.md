@@ -2,7 +2,14 @@
 
 ---
 
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/endpoint-scouter/ci.yml?branch=main)](https://github.com/yourusername/endpoint-scouter/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/yourusername/endpoint-scouter)](https://codecov.io/gh/yourusername/endpoint-scouter)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/yourusername/endpoint-scouter)](https://codeclimate.com/github/yourusername/endpoint-scouter)
+[![Documentation Status](https://readthedocs.org/projects/endpoint-scouter/badge/?version=latest)](https://endpoint-scouter.readthedocs.io/en/latest/?badge=latest)
+[![Security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 ---
 
@@ -37,37 +44,60 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```bash
-python endpoint_scouter.py endpoints.csv
+python -m endpoint_scouter config/endpoints.yaml
 ```
 
 ### Advanced Options
 
 ```bash
-python endpoint_scouter.py endpoints.json \
-  --output report.json \
-  --timeout 10 \
-  --workers 20 \
-  --rate-limit-test 15 \
-  --test-vulnerabilities \
-  --verbose
+python -m endpoint_scouter config/endpoints.yaml \
+  --output custom_report \
+  --format all \
+  --verbose \
+  --dbz-mode
 ```
 
 ### Fun Mode
 
 ```bash
-python endpoint_scouter.py endpoints.csv --dbz-mode
+python -m endpoint_scouter config/endpoints.yaml --dbz-mode
 ```
 
 ## Input File Format
 
-EndpointScouter accepts CSV or JSON files with endpoint definitions.
+EndpointScouter accepts YAML, JSON, or CSV files with endpoint definitions.
+
+### YAML Format (Recommended)
+
+```yaml
+# Global settings
+settings:
+  timeout: 5
+  max_workers: 10
+
+# Tests to run
+tests:
+  security_headers: true
+  cors_headers: true
+
+# Endpoints to scan
+endpoints:
+  - url: https://api.example.com/users
+    method: GET
+    headers:
+      Authorization: "Bearer token"
+  - url: https://api.example.com/admin
+    method: POST
+    payload:
+      username: "test"
+```
 
 ### CSV Format
 
 ```csv
-url,method,expected_status,headers
-https://api.example.com/users,GET,200,{"Authorization":"Bearer token"}
-https://api.example.com/admin,POST,401,{}
+url,method,headers
+https://api.example.com/users,GET,{"Authorization":"Bearer token"}
+https://api.example.com/admin,POST,{}
 ```
 
 ### JSON Format
@@ -77,7 +107,6 @@ https://api.example.com/admin,POST,401,{}
   {
     "url": "https://api.example.com/users",
     "method": "GET",
-    "expected_status": 200,
     "headers": {
       "Authorization": "Bearer token"
     },
@@ -86,7 +115,6 @@ https://api.example.com/admin,POST,401,{}
   {
     "url": "https://api.example.com/admin",
     "method": "POST",
-    "expected_status": 401,
     "headers": {},
     "payload": { "username": "test" }
   }
@@ -95,16 +123,13 @@ https://api.example.com/admin,POST,401,{}
 
 ## Command Line Options
 
-| Option                   | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `endpoints_file`         | CSV or JSON file containing endpoints to check         |
-| `-o, --output`           | Output file for the report (JSON)                      |
-| `-t, --timeout`          | Timeout for requests in seconds (default: 5)           |
-| `-w, --workers`          | Number of parallel workers (default: 10)               |
-| `-r, --rate-limit-test`  | Number of requests to test rate limiting (default: 10) |
-| `--dbz-mode`             | Enable Dragon Ball Z themed responses                  |
-| `--test-vulnerabilities` | Test for common vulnerabilities                        |
-| `-v, --verbose`          | Enable verbose logging                                 |
+| Option          | Description                                           |
+| --------------- | ----------------------------------------------------- |
+| `config_file`   | YAML, JSON or CSV file with endpoints                 |
+| `-o, --output`  | Output file prefix for reports                        |
+| `--format`      | Report format(s): json, csv, html, all (default: all) |
+| `-v, --verbose` | Enable verbose logging                                |
+| `--dbz-mode`    | Enable Dragon Ball Z themed responses                 |
 
 ## Output Reports
 
@@ -160,15 +185,15 @@ Visual report with:
 ### Testing a Production API
 
 ```bash
-python endpoint_scouter.py production_endpoints.csv --output prod_security_report.json
+python -m endpoint_scouter config/production.yaml --output prod_security_report
 ```
 
 ### Testing for Vulnerabilities
 
 ```bash
-python endpoint_scouter.py test_endpoints.json --test-vulnerabilities --verbose
+python -m endpoint_scouter config/test.yaml --verbose
 ```
 
 ## License
 
-MIT
+Apache 2
