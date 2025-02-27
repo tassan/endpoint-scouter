@@ -18,6 +18,17 @@ from endpoint_scouter.utils.validators import (
     validate_payload,
 )
 
+# add cli to __all__
+from endpoint_scouter.utils.cli import (
+    setup_logging,
+    print_header,
+    print_scan_start,
+    print_report_generation,
+    print_completion,
+    print_report_locations,
+    print_error,
+)
+
 __all__ = [
     "load_config",
     "create_session",
@@ -30,4 +41,11 @@ __all__ = [
     "validate_http_method",
     "validate_headers",
     "validate_payload",
+    "setup_logging",
+    "print_header",
+    "print_scan_start",
+    "print_report_generation",
+    "print_completion",
+    "print_report_locations",
+    "print_error",
 ]
