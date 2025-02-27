@@ -6,6 +6,15 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Perform Bandit Analysis
+        uses: PyCQA/bandit-action@v1
   sonarqube:
     name: SonarQube
     runs-on: ubuntu-latest
