@@ -1,5 +1,11 @@
 # EndpointScouter
 
+---
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+---
+
 🔍 **A tool for verifying security measures in API endpoints**
 
 EndpointScouter allows you to quickly assess the security posture of your API endpoints by checking for best practices, security headers, rate limiting, and common vulnerabilities.
