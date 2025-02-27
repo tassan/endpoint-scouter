@@ -6,6 +6,7 @@ settings:
   max_workers: 10  # Maximum parallel workers
   user_agent: "EndpointScouter/1.0"  # User agent string
   debug: false  # Enable debug logging
+  rate_limit_test_count: 10  # Number of requests to test rate limiting
 
 # Tests to run on all endpoints
 tests:
@@ -14,24 +15,21 @@ tests:
   rate_limiting: true  # Test for rate limiting
   vulnerability_scan: true  # Check for common vulnerabilities
   server_info: true  # Check for server information disclosure
+  test_open_redirect: true  # Test for open redirect vulnerabilities
+  test_directory_listing: true  # Test for directory listing vulnerabilities
 
 # List of endpoints to scan
 endpoints:
-  - url: https://api.example.com/users
+  - url: https://httpbin.org/get
     method: GET
     headers:
-      Authorization: "Bearer token123"
-    tags: ["api", "users"]
+      User-Agent: "EndpointScouter Test"
+    tags: ["test", "http"]
     
-  - url: https://api.example.com/admin
-    method: POST
-    headers:
-      Content-Type: "application/json" 
-    payload:
-      username: "test"
-      password: "password"
-    tags: ["api", "admin", "auth"]
-    
-  - url: https://api.example.com/products
+  - url: https://httpbin.org/headers
     method: GET
-    tags: ["api", "products"]
+    tags: ["test", "headers"]
+    
+  - url: https://httpbin.org/status/418
+    method: GET
+    tags: ["test", "status"]

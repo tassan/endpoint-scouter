@@ -7,7 +7,7 @@ This module defines the ScanResult class that represents the results of scanning
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
-from .endpoint import Endpoint
+from endpoint_scouter.core.endpoint import Endpoint
 
 
 class ScanResult:
@@ -73,7 +73,7 @@ class ScanResult:
         """
         return (
             not self.has_issues()
-            and not any(self.vulnerabilities.values())
+            and not any(self.vulnerabilities.values() if self.vulnerabilities else [])
             and len(self.security_headers) >= 3
         )
 
