@@ -49,7 +49,7 @@ def setup_logging(verbose: bool = False) -> None:
     Args:
         verbose: Whether to enable verbose logging
     """
-    log_level=logging.DEBUG if verbose else logging.WARNING
+    log_level = logging.DEBUG if verbose else logging.WARNING
 
     logging.basicConfig(
         level=log_level,
