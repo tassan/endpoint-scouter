@@ -4,6 +4,7 @@ EndpointScouter - A tool for verifying security measures in API endpoints
 """
 
 import sys
+import os
 from datetime import datetime
 
 from endpoint_scouter.utils.cli import (
@@ -61,7 +62,7 @@ def main():
             output_prefix = args.output
         else:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_prefix = f"endpoint_scouter_report_{timestamp}"
+            output_prefix = f"report_{timestamp}"
 
         # Generate reports
         report_files = {}
