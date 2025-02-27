@@ -1,0 +1,37 @@
+# EndpointScouter Configuration
+---
+# Global settings
+settings:
+  timeout: 5  # Request timeout in seconds
+  max_workers: 10  # Maximum parallel workers
+  user_agent: "EndpointScouter/1.0"  # User agent string
+  debug: false  # Enable debug logging
+
+# Tests to run on all endpoints
+tests:
+  security_headers: true  # Check for security headers
+  cors_headers: true  # Check CORS configuration
+  rate_limiting: true  # Test for rate limiting
+  vulnerability_scan: true  # Check for common vulnerabilities
+  server_info: true  # Check for server information disclosure
+
+# List of endpoints to scan
+endpoints:
+  - url: https://api.example.com/users
+    method: GET
+    headers:
+      Authorization: "Bearer token123"
+    tags: ["api", "users"]
+    
+  - url: https://api.example.com/admin
+    method: POST
+    headers:
+      Content-Type: "application/json" 
+    payload:
+      username: "test"
+      password: "password"
+    tags: ["api", "admin", "auth"]
+    
+  - url: https://api.example.com/products
+    method: GET
+    tags: ["api", "products"]
